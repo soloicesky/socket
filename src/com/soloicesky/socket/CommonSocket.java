@@ -30,6 +30,11 @@ public class CommonSocket {
 	private static int hostPort;
 	private static InputStream IS = null;
 	private static OutputStream OS = null;
+	
+	public CommonSocket()
+	{
+		
+	}
 
 	/**
 	 * 
@@ -37,7 +42,7 @@ public class CommonSocket {
 	 * @param port remote host port
 	 * @return 0 connect successful; others are failed
 	 */
-	public static int connectToHost(String ip, int port) {
+	public int connectToHost(String ip, int port) {
 		if (sk != null) {
 			if (!ip.equals(hostIP) || port != hostPort) {
 				if (IS != null) {
@@ -86,7 +91,7 @@ public class CommonSocket {
 	 * @param timeOutMs NO use just in case for reserved
 	 * @return 0 send successful; others are failed
 	 */
-	public static int sendBytes(byte[] reqMsg, int reqMsgLen, long timeOutMs) {
+	public int sendBytes(byte[] reqMsg, int reqMsgLen, long timeOutMs) {
 		if (reqMsg == null || reqMsgLen <= 0) {
 			return ERR_PARAMETERS;
 		}
@@ -113,7 +118,7 @@ public class CommonSocket {
 	 * @param timeOutMs receive timeout milliseconds
 	 * @return < 0 some errors occurs; >=0 received data's length
 	 */
-	public static int receiveBytes(byte[] rspMsg, int wantedLen, long timeOutMs) {
+	public int receiveBytes(byte[] rspMsg, int wantedLen, long timeOutMs) {
 		int reveiveLen = 0;
 		int availabelLen = 0;
 		int readLenPerTime = 0;
@@ -173,7 +178,7 @@ public class CommonSocket {
 	/**
 	 * close the socket
 	 */
-	public static void close() {
+	public void close() {
 		try {
 			OS.close();
 			OS = null;
