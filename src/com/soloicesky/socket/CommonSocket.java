@@ -6,12 +6,15 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import com.soloicesky.timer.Timer;
+
 public class CommonSocket {
 	public static final int ERR_PARAMETERS = -1;
 	public static final int ERR_CONNECT_FAILED = -2;
 	public static final int ERR_BUILD_CONNECTOIN_FIRST = -3;
 	public static final int ERR_SEND_REQ_FAILED = -4;
 	public static final int ERR_RECEIVE_RSP_FAILED = -5;
+	public static final int ERR_RECEIVE_TIMEOUT = -6;
 
 	private static Socket sk = null;
 	private static String hostIP = null;
@@ -85,6 +88,7 @@ public class CommonSocket {
 		int reveiveLen = 0;
 		int availabelLen = 0;
 		int readLenPerTime = 0;
+		Timer tm = null;
 
 		if (rspMsg == null) {
 			return ERR_PARAMETERS;
@@ -94,7 +98,19 @@ public class CommonSocket {
 			return ERR_BUILD_CONNECTOIN_FIRST;
 		}
 
+		if (timeOutMs > 0) {
+			tm = new Timer(timeOutMs);
+			tm.start();
+		}
+
 		while (wantedLen > 0) {
+
+			if (timeOutMs > 0) {
+				if (tm.timeOut()) {
+					return ERR_RECEIVE_TIMEOUT;
+				}
+			}
+
 			try {
 				availabelLen = IS.available();
 			} catch (IOException e) {
@@ -113,8 +129,30 @@ public class CommonSocket {
 					e.printStackTrace();
 				}
 			}
+			
+			try {
+				Thread.sleep(50);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
-		return 0;
+		return reveiveLen;
+	}
+
+	
+	public static void close() {
+		try {
+			OS.close();
+			OS = null;
+			IS.close();
+			IS = null;
+			sk.close();
+			sk = null;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
