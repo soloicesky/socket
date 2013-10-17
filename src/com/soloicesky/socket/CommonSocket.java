@@ -1,3 +1,4 @@
+
 package com.soloicesky.socket;
 
 import java.io.IOException;
@@ -7,6 +8,14 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 import com.soloicesky.timer.Timer;
+
+/**
+ * 
+ * @filname CommonSocket.java
+ * @description A C style socket lib for java
+ * @author soloicesky
+ * @data 2013-10-17		@time ÏÂÎç2:53:12
+ */
 
 public class CommonSocket {
 	public static final int ERR_PARAMETERS = -1;
@@ -22,6 +31,12 @@ public class CommonSocket {
 	private static InputStream IS = null;
 	private static OutputStream OS = null;
 
+	/**
+	 * 
+	 * @param ip remote  host ip
+	 * @param port remote host port
+	 * @return 0 connect successful; others are failed
+	 */
 	public static int connectToHost(String ip, int port) {
 		if (sk != null) {
 			if (!ip.equals(hostIP) || port != hostPort) {
@@ -64,6 +79,13 @@ public class CommonSocket {
 		return 0;
 	}
 
+	/**
+	 * 
+	 * @param reqMsg request message that will be send to the remote 
+	 * @param reqMsgLen request message's length
+	 * @param timeOutMs NO use just in case for reserved
+	 * @return 0 send successful; others are failed
+	 */
 	public static int sendBytes(byte[] reqMsg, int reqMsgLen, long timeOutMs) {
 		if (reqMsg == null || reqMsgLen <= 0) {
 			return ERR_PARAMETERS;
@@ -84,6 +106,13 @@ public class CommonSocket {
 		return 0;
 	}
 
+	/**
+	 * 
+	 * @param rspMsg storage the data
+	 * @param wantedLen expected receive data length
+	 * @param timeOutMs receive timeout milliseconds
+	 * @return < 0 some errors occurs; >=0 received data's length
+	 */
 	public static int receiveBytes(byte[] rspMsg, int wantedLen, long timeOutMs) {
 		int reveiveLen = 0;
 		int availabelLen = 0;
@@ -141,7 +170,9 @@ public class CommonSocket {
 		return reveiveLen;
 	}
 
-	
+	/**
+	 * close the socket
+	 */
 	public static void close() {
 		try {
 			OS.close();
